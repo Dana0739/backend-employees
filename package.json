@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node resources/bin/www",
+    "test": "xo"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^4.16.4",
+    "http-errors": "~1.6.3",
+    "knex": "^0.95.11",
+    "morgan": "~1.9.1",
+    "pg": "^8.7.1",
+    "postgres": "^1.0.2",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "xo": "^0.45.0"
+  }
+}
