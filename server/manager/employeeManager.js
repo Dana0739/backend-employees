@@ -1,50 +1,84 @@
-const validator = require('../utils/employeeVaidator')
 const repository = require('../repository/employeeRepository')
 
 //CREATE UPDATE
 //save employee
-const saveEmployee = (req, res, id = false) => {
-    if (validator.checkEmployeeParameters(req, res)) {
+const saveEmployee = (req, id = false) => {
+    return new Promise(function (resolve, reject) {
         const {name, surname, position, date_of_birth, salary} = req.body
         if (!id) {
-            repository.addEmployee(name, surname, position, date_of_birth, salary, res)
+            repository.addEmployee(name, surname, position, date_of_birth, salary).then(
+                (result, error) => {
+                    result ? resolve(result) : reject(error)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
         } else {
-            id = validator.getValidId(req, res)
-            repository.updateEmployee(id, name, surname, position, date_of_birth, salary, res)
+            id = parseInt(req.params.id)
+            repository.updateEmployee(id, name, surname, position, date_of_birth, salary).then(
+                (result, error) => {
+                    result ? resolve(result) : reject(error)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
         }
-    }
+    })
+}
+
+const notMentionedBoolean = (param) => {
+    return param === 'false' || !param
+}
+
+const checkIfSimpleGetAllEmployees = (req) => {
+    return !req.query.name && !req.query.surname && notMentionedBoolean(req.query.sorted) && !req.query.order && !req.query.page
 }
 
 
 //READ
 //get all employees
-const getAllEmployees = (req, res) => {
-    if (validator.checkIfSimpleGetAllEmployees(req)) {
-        repository.getAllEmployees(req, res)
-        return
-    }
-    if (validator.validateFilterSortParams(req, res)) {
-        const name = req.query.name
-        const surname = req.query.surname
-        const sorted = req.query.sorted
-        const order = req.query.order //if no order - value is undefined and default value of arg is used if function
-        const page = req.query.page
-        repository.getAllEmployeesFilterSort(req, res, name, surname, sorted, order, page)
-    }
+const getAllEmployees = (req) => {
+    return new Promise(function (resolve, reject) {
+        if (checkIfSimpleGetAllEmployees(req)) {
+            repository.getAllEmployees(req).then(
+                (result, error) => {
+                    result ? resolve(result) : reject(error)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        } else {
+            const {name, surname, sorted, order, page} = req.query //TODO check if undefined
+            repository.getAllEmployeesFilterSort(req, name.toLowerCase(), surname.toLowerCase(), sorted, order, page)
+                .then((result, error) => {
+                    result ? resolve(result) : reject(error)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        }
+    })
 }
 
 //get employee by id
-const getEmployeeById = (req, res) => {
-    const id = validator.getValidId(req, res)
-    repository.getEmployeeById(req, res, id)
+const getEmployeeById = (req) => {
+    return new Promise(function (resolve, reject) {
+        repository.getEmployeeById(req, parseInt(req.params.id)).then(
+            (result, error) => {
+                console.log(error ? error : result)
+                result ? resolve(result) : reject(error)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    })
 }
 
 
 //DELETE
 //delete employee by id
-const deleteEmployee = (req, res) => {
-    const id = validator.getValidId(req, res)
-    repository.deleteEmployee(req, res, id)
+const deleteEmployee = (req) => {
+    return repository.deleteEmployee(parseInt(req.params.id))
 }
 
 
