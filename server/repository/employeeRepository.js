@@ -20,7 +20,7 @@ const addEmployee = (name, surname, position, date_of_birth, salary) => {
                 resolve(rows)
             })
             .catch((error) => {
-                reject(error)
+                reject(500, error)
             })
     })
 }
@@ -38,7 +38,7 @@ const addTestEmployee = () => {
             },
         ])
             .then((rows) => {
-                return rows
+                resolve(rows)
             })
             .catch((error) => {
                 reject(error)
@@ -62,7 +62,7 @@ const updateEmployee = (id, name, surname, position, date_of_birth, salary) => {
                 rows === 1 ? resolve(200) : reject(500)
             })
             .catch((error) => {
-                reject(error)
+                reject(500, error)
             })
     })
 }
@@ -85,12 +85,12 @@ const getAllEmployees = () => {
 //  filter by: name, surname
 //  sort by: salary, order - ASC or DESC
 //  paging: 25 elements on page
-const getAllEmployeesFilterSort = (req, name = null, surname = null,
-                                   isSorted = false, sortOrder = 'ASC', pageNumber = null) => {
+const getAllEmployeesFilterSort = (req, name = null, surname = null, isSorted = false,
+                                   sortOrder = 'ASC', pageNumber = null) => {
     return new Promise(function (resolve, reject) {
         let query = knex.from('employees').select("*")
-        if (name) query.whereRaw('LOWER(name) = ?', [`${name}`])
-        if (surname) query.whereRaw('LOWER(name) = ?', [`${surname}`])
+        if (name) query.whereRaw(`LOWER(name) = '${name}'`)
+        if (surname) query.whereRaw(`LOWER(surname) = '${surname}'`)
         if (isSorted) query.orderBy('salary', sortOrder)
         if (pageNumber === '0' || pageNumber) query.limit(25 * (pageNumber + 1))
         query.offset(pageNumber ? 25 * pageNumber : 0)

@@ -65,8 +65,6 @@ router.get('/knex/drop', function(req, res) {
 
 /* ------------ TEST SECTION ended ------------ */
 
-//TODO validation - handle errors
-//todo libs: joy - fluent interface, ajv - json schema
 
 
 /* CRUD for employees */
@@ -75,8 +73,8 @@ router.route('/')
         manager.getAllEmployees(req).then(
             employees => res.send(employees),
             error => {
-                console.log(error)
-                res.status(500).send(error)
+                console.log(error.status, error.value)
+                res.status(error.status).send(error.value)
             }
         )
     })
@@ -84,8 +82,8 @@ router.route('/')
         manager.saveEmployee(req).then(
             employee => res.send(employee),
             error => {
-                console.log(error)
-                res.status(500).send(error)
+                console.log(error.status, error.value)
+                res.status(error.status).send(error.value)
             }
         )
     })
@@ -105,8 +103,8 @@ router.route('/:id')
         manager.saveEmployee(req,true).then(
             employee => res.send(employee),
             error => {
-                console.log(error)
-                error === 500 ? res.status(500).send() : res.status(400).send()
+                console.log(error.status, error.value)
+                res.status(error.status).send(error.value)
             }
         )
     })

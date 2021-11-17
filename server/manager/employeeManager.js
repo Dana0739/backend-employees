@@ -1,27 +1,34 @@
 const repository = require('../repository/employeeRepository')
+const schemas = require('../utils/schemas');
 
 //CREATE UPDATE
 //save employee
 const saveEmployee = (req, id = false) => {
     return new Promise(function (resolve, reject) {
-        const {name, surname, position, date_of_birth, salary} = req.body
-        if (!id) {
-            repository.addEmployee(name, surname, position, date_of_birth, salary).then(
-                (result, error) => {
-                    result ? resolve(result) : reject(error)
-                })
-                .catch((error) => {
-                    reject(error)
-                })
-        } else {
-            id = parseInt(req.params.id)
-            repository.updateEmployee(id, name, surname, position, date_of_birth, salary).then(
-                (result, error) => {
-                    result ? resolve(result) : reject(error)
-                })
-                .catch((error) => {
-                    reject(error)
-                })
+        const result = schemas.schemas.employeePOST.validate(req.body, {"convert": true})
+        if (result.error) {
+            reject({status : 422, value : result.error})
+        }
+        else {
+            const {name, surname, position, date_of_birth, salary} = result.value
+            if (!id) {
+                repository.addEmployee(name, surname, position, date_of_birth, salary).then(
+                    (result, error) => {
+                        result ? resolve(result) : reject({status : 500, value : error})
+                    })
+                    .catch((error) => {
+                        reject({status : 500, value : error})
+                    })
+            } else {
+                id = parseInt(req.params.id)
+                repository.updateEmployee(id, name, surname, position, date_of_birth, salary).then(
+                    (result, error) => {
+                        result ? resolve(result) : reject({status : 500, value : error})
+                    })
+                    .catch((error) => {
+                        reject({status : 500, value : error})
+                    })
+            }
         }
     })
 }
@@ -48,14 +55,19 @@ const getAllEmployees = (req) => {
                     reject(error)
                 })
         } else {
-            const {name, surname, sorted, order, page} = req.query //TODO check if undefined
-            repository.getAllEmployeesFilterSort(req, name.toLowerCase(), surname.toLowerCase(), sorted, order, page)
-                .then((result, error) => {
-                    result ? resolve(result) : reject(error)
-                })
-                .catch((error) => {
-                    reject(error)
-                })
+            const result = schemas.schemas.filterSortGET.validate(req.query, {"convert": true})
+            if (result.error) {
+                reject({status : 422, value : result.error})
+            } else {
+                const {name, surname, sorted, order, page} = result.value
+                repository.getAllEmployeesFilterSort(req, name.toLowerCase(), surname.toLowerCase(), sorted, order, page)
+                    .then((result, error) => {
+                        result ? resolve(result) : reject({status : 500, value : error})
+                    })
+                    .catch((error) => {
+                        reject({status : 500, value : error})
+                    })
+            }
         }
     })
 }
