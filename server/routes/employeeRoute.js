@@ -8,25 +8,25 @@ const schemas = require('../utils/schemas')
 /* ------------ TEST SECTION ------------ */
 
 /* GET time for testing connection. */
-router.get('/time', async function (req, res) {
+router.get('/database/time', async function (req, res) {
     const time = await db.getTime()
     res.status(time.status).send(time.value)
 })
 
 /* KNEX setup for create table. */
-router.get('/repository/setup', async function (req, res) {
+router.get('/database/setup', async function (req, res) {
     const result = await repository.setupTable()
     res.status(result.status).send(result.value)
 })
 
 /* KNEX add test employee in table. */
-router.get('/repository/add', async function (req, res) {
+router.get('/database/add-test-user', async function (req, res) {
     const result = await repository.addTestEmployee()
     res.status(result.status).send(result.value)
 })
 
 /* KNEX drop for drop table. */
-router.get('/repository/drop', async function (req, res) {
+router.get('/database/drop', async function (req, res) {
     const result = await repository.dropTable()
     res.status(result.status).send(result.value)
 })
