@@ -15,6 +15,9 @@ const schemas = {
         sorted: Joi.bool(),
         order: Joi.string().valid('asc', 'desc').insensitive(),
         page: Joi.number().min(0).integer(),
+    }),
+    byID: Joi.object().keys({
+        id: Joi.number().min(0).integer(),
     })
 }
 
