@@ -16,7 +16,7 @@ const addEmployee = (name, surname, position, date_of_birth, salary) => knex('em
     .then(rows => ({status: 200, value: rows}))
     .catch(error => ({status: 500, value: error}));
 
-// Add test employee
+// add test employee
 const addTestEmployee = () => knex('employees').insert([
     {
         name: 'A',
@@ -59,7 +59,7 @@ const getAllEmployeesFilterSort = (name = null, surname = null, isSorted = false
         .catch(error => ({status: 500, value: error}));
 };
 
-// Get employee by id
+// get employee by id
 const getEmployeeById = id => knex.from('employees').select('*')
     .where('id', '=', id).first()
     .then(row => ({status: 200, value: row}))
@@ -89,7 +89,7 @@ const setupTable = () => knex.schema.createTableIfNotExists('employees', table =
     .then(row => ({status: 200, value: row}))
     .catch(error => ({status: 500, value: error}));
 
-// Drop
+// drop
 const dropTable = () => knex.schema.dropTableIfExists('employees')
     .then(row => ({status: 200, value: row}))
     .catch(error => ({status: 500, value: error}));

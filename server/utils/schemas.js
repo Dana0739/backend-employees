@@ -19,6 +19,10 @@ const schemas = {
 	byID: Joi.object().keys({
 		id: Joi.number().min(0).integer(),
 	}),
+	userAuthentication: Joi.object().keys({
+		name: Joi.string().min(1).max(100).required(),
+		password_digest: Joi.string().min(1).max(100).required(),
+	}),
 };
 
 module.exports = {
