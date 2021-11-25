@@ -10,8 +10,6 @@ Course: Magistracy, 1st course
 
 Group: 5040102/10101
 
-Supervisor: Vladislav Lomako
-
 ## Installation
 ```bash
 git clone https://github.com/Dana0739/backend-employees.git
@@ -26,10 +24,8 @@ node .\backend\resources\bin\www
 + app.js - main express application script, constructs project, auth, bodyparser, routes, 404 & 500 handlers and etc
 + */server*
   + */auth*
-    + *config.js* - secret
     + *userRepository.js* - authorisation of user representation in db
   + */employee*
-    + *config.js* - db connections credentials
     + *employeeRepository.js* - contains data layer for repository (via **knex**)
     + *rawQueries.js* - contains test time query via simple pool
   + */routes*
@@ -37,8 +33,9 @@ node .\backend\resources\bin\www
     + *userRoute.js* - authentication records and tokens handler
   + */utils*
     + *schemas.js* - **Joi** validation schemas
-+ */resources/bin/www .js* - application launcher
-
++ */resources*
+  + */bin/www .js* - application launcher
+  + */config/config.js* - db connections credentials and secret for jwt
 ## Contributing
 Pull requests are not welcome. This is an educational project that will never be used and developed for production, but you still can donate.
 

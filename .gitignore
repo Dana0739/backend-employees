@@ -1,5 +1,4 @@
 # Project exclude paths
 /node_modules/
 /.idea/
-/server/employee/config.js
-/server/auth/config.js
+/resources/config/config.js

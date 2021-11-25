@@ -1,4 +1,4 @@
-const conf = require('./config').knexConfig;
+const conf = require('../../resources/config/config').knexConfig;
 
 const knex = require('knex')(conf);
 
@@ -16,19 +16,6 @@ const addEmployee = (name, surname, position, date_of_birth, salary) => knex('em
     .then(rows => ({status: 200, value: rows}))
     .catch(error => ({status: 500, value: error}));
 
-// add test employee
-const addTestEmployee = () => knex('employees').insert([
-    {
-        name: 'A',
-        surname: 'AA',
-        position: 'Junior Software Engineer',
-        date_of_birth: '1999-03-07',
-        salary: 5_000_000,
-    },
-])
-    .then(rows => ({status: 200, value: rows}))
-    .catch(error => ({status: 500, value: error}));
-
 // UPDATE
 // update employee by id
 const updateEmployee = (id, name, surname, position, date_of_birth, salary) => knex('employees').where('id', '=', id).update(
@@ -39,7 +26,7 @@ const updateEmployee = (id, name, surname, position, date_of_birth, salary) => k
         date_of_birth,
         salary,
     })
-    .then(rows => rows === 1 ? {status: 200, value: 200} : {status: 400, value: 400})
+    .then(rows => rows === 1 ? {status: 200, value: {result: "OK"}} : {status: 400, value: {result: "Not found"}})
     .catch(error => ({status: 500, value: error}));
 
 // READ
@@ -69,38 +56,36 @@ const getEmployeeById = id => knex.from('employees').select('*')
 // delete employee by id
 const deleteEmployee = id => knex('employees').where('id', '=', id).del()
     .then(rows => {
-        if (rows === 1) return {status: 200, value: 200};
-        if (rows === 0) return {status: 400, value: 400};
-        return {status: 500, value: 500};
+        if (rows === 1) return {status: 200, value: {result: "OK"}};
+        if (rows === 0) return {status: 400, value: {result: "Not found"}};
+        return {status: 500, value: {result: "Server error"}};
     })
     .catch(error => ({status: 500, value: error}));
 
-// INITIALISATION STEPS
-// setup
-const setupTable = () => knex.schema.createTableIfNotExists('employees', table => {
-    table.increments(); // Integer id
-    table.specificType('name', 'varchar(100) check(length(name) <= 100 and length(name) > 0)').notNullable();
-    table.specificType('surname', 'varchar(100) check(length(surname) <= 100 and length(surname) > 0)').notNullable();
-    table.enu('position', ['Junior Software Engineer', 'Software Engineer',
-        'Senior Software Engineer', 'Lead Software Engineer']).notNullable();
-    table.timestamp('date_of_birth').notNullable();
-    table.specificType('salary', 'decimal check(salary > 0)').notNullable();
-})
-    .then(row => ({status: 200, value: row}))
-    .catch(error => ({status: 500, value: error}));
-
-// drop
-const dropTable = () => knex.schema.dropTableIfExists('employees')
-    .then(row => ({status: 200, value: row}))
-    .catch(error => ({status: 500, value: error}));
-
 module.exports = {
-    setupTable,
-    dropTable,
     addEmployee,
-    addTestEmployee,
     updateEmployee,
     getEmployeeById,
     deleteEmployee,
     getAllEmployeesFilterSort,
 };
+
+
+// // INITIALISATION STEPS
+// // setup
+// const setupTable = () => knex.schema.createTableIfNotExists('employees', table => {
+//     table.increments(); // Integer id
+//     table.specificType('name', 'varchar(100) check(length(name) <= 100 and length(name) > 0)').notNullable();
+//     table.specificType('surname', 'varchar(100) check(length(surname) <= 100 and length(surname) > 0)').notNullable();
+//     table.enu('position', ['Junior Software Engineer', 'Software Engineer',
+//         'Senior Software Engineer', 'Lead Software Engineer']).notNullable();
+//     table.timestamp('date_of_birth').notNullable();
+//     table.specificType('salary', 'decimal check(salary > 0)').notNullable();
+// })
+//     .then(row => ({status: 200, value: row}))
+//     .catch(error => ({status: 500, value: error}));
+//
+// // drop
+// const dropTable = () => knex.schema.dropTableIfExists('employees')
+//     .then(row => ({status: 200, value: row}))
+//     .catch(error => ({status: 500, value: error}));

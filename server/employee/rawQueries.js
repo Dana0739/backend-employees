@@ -1,5 +1,5 @@
 const Pool = require('pg').Pool;
-const options = require('./config').poolOptions;
+const options = require('../../resources/config/config').poolOptions;
 
 const pool = new Pool(options);
 

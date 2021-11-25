@@ -7,35 +7,11 @@ const schemas = require('../utils/schemas');
 
 module.exports = function (passport) {
 
-    /* ------------ CONFIGURATION SECTION ------------ */
-
     /* GET time for testing connection. */
     router.get('/database/time', async (request, response) => {
         const time = await db.getTime();
         response.status(time.status).send(time.value);
     });
-
-    /* KNEX setup for create table. */
-    router.get('/database/setup', async (request, response) => {
-        const result = await repository.setupTable();
-        response.status(result.status).send(result.value);
-    });
-
-    /* KNEX add test employee in table. */
-    router.get('/database/add-test-user', async (request, response) => {
-        const result = await repository.addTestEmployee();
-        response.status(result.status).send(result.value);
-    });
-
-    /* KNEX drop for drop table. */
-    router.get('/database/drop', async (request, response) => {
-        const result = await repository.dropTable();
-        response.status(result.status).send(result.value);
-    });
-
-    /* ------------ CONFIGURATION SECTION ended ------------ */
-
-
 
     /* CRUD for employees */
     router.route('/')

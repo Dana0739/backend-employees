@@ -1,28 +1,13 @@
 const express = require('express');
-
 const router = express.Router();
-
 const bcrypt = require('bcrypt');
 const repository = require('../auth/userRepository');
 const schemas = require('../utils/schemas');
 const User = repository.User;
-const conf = require('../auth/config');
+const conf = require('../../resources/config/config');
 const jwt = require('jsonwebtoken');
 
-/* KNEX setup for create table. */
-router.get('/setup', async (request, response) => {
-    const result = await repository.setupTable();
-    response.status(result.status).send(result.value);
-});
-
-/* KNEX drop for drop table. */
-router.get('/drop', async (request, response) => {
-    const result = await repository.dropTable();
-    response.status(result.status).send(result.value);
-});
-
-
-//Register User
+// Register User
 router.post('/register', async (request, response) => {
     const validate = schemas.schemas.userAuthentication.validate(request.body, {convert: true});
     if (validate.error) {
@@ -41,7 +26,7 @@ router.post('/register', async (request, response) => {
 });
 
 // Authenticate && Return a Token if Valid User/Password
-router.post('/getToken', (request, response) => {
+router.get('/token', (request, response) => {
     const validate = schemas.schemas.userAuthentication.validate(request.body, {convert: true});
     if (validate.error) {
         return response.status(422).send(validate.error);
