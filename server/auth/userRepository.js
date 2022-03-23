@@ -17,6 +17,20 @@ module.exports = {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // // INITIALISATION STEPS
 // // setup
 // const setupTable = () => knex.schema.createTableIfNotExists('user_authentication', table => {

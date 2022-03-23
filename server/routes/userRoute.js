@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 router.post('/register', async (request, response) => {
     const validate = schemas.schemas.userAuthentication.validate(request.body, {convert: true});
     if (validate.error) {
-        return response.status(422).send(validate.error);
+        return response.status(400).send(validate.error);
     }
     const hashedPassword = await bcrypt.hash(validate.value.password_digest, 12, null); //bcrypt encryption
 
@@ -29,7 +29,7 @@ router.post('/register', async (request, response) => {
 router.get('/token', (request, response) => {
     const validate = schemas.schemas.userAuthentication.validate(request.body, {convert: true});
     if (validate.error) {
-        return response.status(422).send(validate.error);
+        return response.status(400).send(validate.error);
     }
 
     User.forge({name: validate.value.name}).fetch().then(result => {

@@ -32,9 +32,17 @@ app.use(passport.initialize({}));
 
 app.use('/employees', employeesRouter);
 app.use('/auth', authRouter);
+// app.use(errorHandler);
 
 //todo my own handler
 //todo handle unhendeled exception
-//todo unhandeled promise rejection
+
+// function errorHandler(err, req, res, next) {
+//     if (res.headersSent) {
+//         return next(err);
+//     }
+//     res.status(500);
+//     res.render('error', { error: err });
+// }
 
 module.exports = app;
